@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="Dice Party - game đổ xúc xắc 3D nhiều người chơi, không tài khoản, không lưu dữ liệu qua phiên." />
+  <title>Dice Party — Shake your luck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --bg:#0a1021; --panel:#151e35; --stroke:rgba(193,214,255,.12); --text:#f1f5ff; --muted:#8391ac; --mint:#83f5cd; --purple:#a68aff; --orange:#ffcf8d; --pink:#ff89ba; --rad:22px; }
+    *{box-sizing:border-box} html,body{min-height:100%;margin:0}
+    body{font-family:'Be Vietnam Pro',sans-serif;color:var(--text);background:radial-gradient(ellipse at 10% -20%,#283765 0%,transparent 39%),radial-gradient(ellipse at 80% 90%,#20274a 0%,transparent 42%),#090e1e;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(206,216,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(206,216,255,.022) 1px,transparent 1px);background-size:45px 45px;mask-image:linear-gradient(to bottom,transparent,black 15%,transparent 92%)}
+    .app{position:relative;z-index:1;max-width:1450px;padding:30px 38px 40px;margin:auto}
+    button,input{font:inherit} button{cursor:pointer;border:0;transition:transform .18s,background .18s,opacity .18s;white-space:nowrap}button:active{transform:scale(.97)}button:disabled{cursor:not-allowed;opacity:.35;transform:none}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:29px}
+    .brand{display:flex;align-items:center;gap:14px}.brand-symbol{width:50px;height:50px;border-radius:17px;background:linear-gradient(140deg,#b9a3ff,#80f4e0);display:grid;place-items:center;box-shadow:0 12px 40px #a18cff28;transform:rotate(-9deg)}
+    .brand-die{width:23px;height:23px;background:#202044;border-radius:6px;position:relative;transform:rotate(9deg)}.brand-die:before,.brand-die:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:#adffdc;top:9px;left:9px}.brand-die:after{box-shadow:-7px -7px #adffdc,7px 7px #adffdc}
+    .brand-name{font:700 25px/1 'Space Grotesk',sans-serif;letter-spacing:-1.3px}.brand-name em{font-style:normal;color:var(--mint)}.brand-sub{font-size:10px;letter-spacing:3px;color:var(--muted);font-weight:800;margin-top:7px}
+    .header-right{display:flex;align-items:center;gap:12px}.pill{padding:11px 15px;border:1px solid var(--stroke);border-radius:100px;font:600 11px 'Space Grotesk',sans-serif;color:#becbe6;display:flex;align-items:center;gap:8px;letter-spacing:.6px}.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 13px #83f5cd8f}.icon-btn{width:40px;height:40px;border:1px solid var(--stroke);background:#172039;border-radius:13px;color:#bfcee9;font-size:17px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+    .game-main{min-width:0}.stage{border:1px solid #2a3553;border-radius:27px;background:radial-gradient(circle at 45% 25%,#2b3056 0%,#151d36 41%,#10172c 81%);overflow:hidden;position:relative;min-height:625px;isolation:isolate;box-shadow:0 30px 70px #0003}
+    .stage:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 22%,#c0a2ff23,transparent 28%),radial-gradient(circle at 90% 78%,#80f8d615,transparent 30%)}
+    .stage-head{position:relative;z-index:4;display:flex;justify-content:space-between;align-items:start;padding:29px 33px 0;gap:10px}.eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:800;color:#8293b7;margin:0 0 12px}
+    .turn-name{font-weight:800;font-size:clamp(20px,3vw,32px);letter-spacing:-1.4px;line-height:1.3;max-width:400px;overflow-wrap:anywhere}.turn-name .accent{color:var(--mint)}.turn-badge{background:#ffffff10;border:1px solid #ffffff18;border-radius:14px;padding:10px 14px;font:600 11px 'Space Grotesk';color:#c4cee1;text-align:center;line-height:1.6}.turn-badge strong{display:block;font-size:23px;color:white}
+    .sparkle{position:absolute;width:5px;height:5px;border-radius:100%;background:#d7c7ff;opacity:.4;box-shadow:0 0 13px #e2c9ff;animation:twinkle 3s ease-in-out infinite alternate}.s1{left:18%;top:29%}.s2{right:20%;top:20%;animation-delay:.7s}.s3{left:27%;bottom:25%;animation-delay:1.8s}.s4{right:14%;bottom:34%;animation-delay:.9s}.s5{left:56%;top:24%;animation-delay:2.1s}@keyframes twinkle{to{opacity:.8;transform:scale(1.7)}}
+    .dice-zone{position:relative;z-index:3;min-height:365px;margin:0 28px;display:flex;flex-direction:column;justify-content:center;align-items:center;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;outline:0}.dice-zone.grabbing{cursor:grabbing}.dice-zone:focus-visible{outline:2px solid var(--mint);border-radius:14px}
+    .table-ellipse{position:absolute;top:50%;left:50%;width:min(650px,100%);height:225px;transform:translate(-50%,-9%);border-radius:50%;background:radial-gradient(ellipse,#8e94f82b 0%,#7169db1d 42%,transparent 67%);border:1px solid #c3abff13;box-shadow:0 0 0 28px #a899ff04,0 0 0 54px #b1b0ff03;pointer-events:none}
+    .table-ellipse:before{content:"";position:absolute;inset:28px 45px;border-radius:50%;border:1px dashed #caafff30;transform:rotate(-9deg)}
+    .dice-row{display:flex;align-items:center;justify-content:center;gap:clamp(38px,7vw,90px);margin-top:35px;perspective:850px;filter:drop-shadow(0 45px 20px #02040e70);transition:transform .18s ease;transform-style:preserve-3d}.dice-zone.grabbing .dice-row{transform:scale(1.035)}
+    .die-wrap{width:clamp(99px,12vw,142px);height:clamp(99px,12vw,142px);position:relative;perspective:700px;--size:clamp(99px,12vw,142px);--half:clamp(49.5px,6vw,71px)}
+    .die-wrap:nth-child(1){transform:translateY(-9px) rotate(-7deg)}.die-wrap:nth-child(2){transform:translateY(15px) rotate(8deg)}
+    .die{position:absolute;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(350deg) rotateY(340deg);will-change:transform;transition:transform 850ms cubic-bezier(.15,.65,.25,1.05)}
+    .face{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:19%;border-radius:17px;background:linear-gradient(150deg,#ffffff,#dce5ff);border:2px solid #eaf0ff;box-shadow:inset -8px -9px 15px #b6c3e95c,inset 4px 4px 12px white,0 0 14px #cbb9ff25;backface-visibility:hidden;transform-style:preserve-3d}
+    .die-wrap.second .face{background:linear-gradient(150deg,#e3fffa,#b9e9df);border-color:#d8fff5;box-shadow:inset -7px -8px 15px #69c7bb78,inset 4px 4px 12px #f2fffc}
+    .pip{width:59%;height:59%;justify-self:center;align-self:center;border-radius:50%;background:#55448d;box-shadow:inset 2px 2px 3px #23134c55,0 1px 0 #fff9}.second .pip{background:#217c77;box-shadow:inset 2px 2px 3px #00453e77}
+    .face.front{transform:translateZ(var(--half))}.face.back{transform:rotateY(180deg) translateZ(var(--half))}.face.right{transform:rotateY(90deg) translateZ(var(--half))}.face.left{transform:rotateY(-90deg) translateZ(var(--half))}.face.top{transform:rotateX(90deg) translateZ(var(--half))}.face.bottom{transform:rotateX(-90deg) translateZ(var(--half))}
+    .shaking .die-wrap:nth-child(1){animation:wiggleA .16s infinite alternate}.shaking .die-wrap:nth-child(2){animation:wiggleB .15s infinite alternate}@keyframes wiggleA{to{transform:translate(6px,-19px) rotate(1deg)}}@keyframes wiggleB{to{transform:translate(-8px,6px) rotate(-3deg)}}
+    .floating-cue{position:absolute;bottom:21px;display:flex;align-items:center;gap:7px;color:#b6c4dc;font-size:11px;font-weight:600;pointer-events:none}.floating-cue b{color:var(--mint);font-family:'Space Grotesk'}
+    .stage-bottom{position:relative;z-index:5;text-align:center;padding:1px 25px 31px;min-height:132px}.result-area{min-height:60px;display:flex;justify-content:center;align-items:center;gap:17px}.mini-pill{border:1px solid #ffffff20;border-radius:100px;padding:8px 13px;color:#c0cde3;font-size:11px;background:#141d36a8}.result-number{font:700 41px/1 'Space Grotesk',sans-serif;letter-spacing:-2px}.result-number span{font-size:13px;letter-spacing:0;color:#a4b0c9;margin-right:9px;font-weight:500}
+    .main-action{background:linear-gradient(100deg,#a68cff,#7fefdd);color:#10182d;border-radius:16px;min-width:235px;min-height:52px;padding:12px 24px;font-weight:900;box-shadow:0 11px 36px #987ded2b;letter-spacing:-.3px}.main-action:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}.hint{font-size:11px;color:#8191b1;margin-top:11px}
+    .info-strip{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.info-card{background:#121a30b8;border:1px solid var(--stroke);border-radius:17px;padding:17px 19px;min-width:0}.info-card .small{font-size:10px;color:#8392af;font-weight:700;letter-spacing:1.2px;margin-bottom:8px}.info-card .big{font:700 22px 'Space Grotesk';color:#eef5ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.big .unit{font:500 10px 'Be Vietnam Pro';color:var(--muted);margin-left:6px}
+    .sidebar{display:flex;flex-direction:column;gap:15px}.panel{background:linear-gradient(160deg,#19233b,#131d33);border:1px solid var(--stroke);border-radius:22px;padding:22px;box-shadow:0 20px 45px #00000014}.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:8px}.panel-title{font-size:14px;font-weight:800;letter-spacing:-.3px}.panel-count{font:700 11px 'Space Grotesk';border:1px solid #ffffff1d;background:#ffffff0d;border-radius:20px;padding:6px 10px;color:#aec0d6}
+    .add-row{display:flex;gap:8px;margin-bottom:13px}.name-field{min-width:0;flex:1;background:#0e1628;border:1px solid #31405a;color:#edf8ff;padding:0 13px;border-radius:12px;height:42px;outline:none;font-size:12px}.name-field::placeholder{color:#63738e}.name-field:focus{border-color:#9a91e6;box-shadow:0 0 0 3px #ae93ff16}.add-btn{width:42px;height:42px;background:#a3f3de;color:#172d3a;font-size:25px;line-height:1;border-radius:12px;font-weight:500}.add-btn:hover{background:#c9ffef}
+    .player-list{display:flex;flex-direction:column;gap:8px;max-height:295px;overflow-y:auto;scrollbar-width:thin}.player-row{min-height:47px;border:1px solid #ffffff0c;background:#ffffff08;border-radius:13px;display:flex;align-items:center;gap:10px;padding:8px 11px;transition:all .25s}.player-row.active{background:linear-gradient(90deg,#99efdb1b,#9676ff11);border-color:#91e3d74f}.avatar{width:31px;height:31px;flex:0 0 31px;border-radius:10px;display:grid;place-items:center;font:800 12px 'Space Grotesk';color:#15152b;background:var(--av,#c5bbff)}.person-name{font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.person-meta{font:500 10px 'Space Grotesk';color:#91a1be}.delete-player{width:22px;height:22px;padding:0;color:#8491a9;background:transparent;border-radius:5px;font-size:19px}.delete-player:hover{color:#ff9db0;background:#ff9db018}
+    .start-btn,.subtle-btn{display:block;width:100%;border-radius:13px;height:43px;font-size:12px;font-weight:800;margin-top:14px}.start-btn{color:#182237;background:#b5a2ff}.start-btn:hover{background:#c4b8ff}.subtle-btn{background:#ffffff0b;color:#bfcde2;border:1px solid #ffffff14}.subtle-btn:hover{background:#ffffff1a}.panel-note{margin:13px 0 0;font-size:10px;line-height:1.8;color:#7589a7}
+    .leaderboard{display:flex;flex-direction:column;gap:10px}.rank-row{display:flex;gap:10px;align-items:center}.rank-num{font:700 12px 'Space Grotesk';color:#96a4bd;width:22px}.rank-bar-track{flex:1;min-width:0}.rank-bar-label{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:11px}.rank-bar-label strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}.rank-bar-label span{font:700 12px 'Space Grotesk'}.rank-bar{height:5px;border-radius:5px;background:#ffffff11;overflow:hidden}.rank-bar i{height:100%;display:block;border-radius:6px;background:linear-gradient(90deg,#a990ff,#7cf4d4);transition:width .5s}
+    .history{max-height:203px;overflow:auto;scrollbar-width:thin}.hist-row{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #ffffff0c;padding:10px 0;font-size:10px}.hist-row:last-child{border-bottom:0}.hist-name{color:#d6e3f9;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:135px}.hist-detail{color:#8291ab;font:500 10px 'Space Grotesk'}.hist-score{font:800 16px 'Space Grotesk';color:#a8f5df}.empty{padding:12px 0;color:#7c8aa8;font-size:11px;line-height:1.9}
+    .toast{position:fixed;left:50%;bottom:23px;transform:translate(-50%,20px);background:#233352;color:#f7faff;border:1px solid #60739c80;padding:11px 18px;border-radius:14px;z-index:30;font-size:12px;box-shadow:0 15px 50px #0008;opacity:0;pointer-events:none;transition:.23s}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .celebration{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden}.confetti{position:absolute;width:8px;height:15px;border-radius:2px;animation:fall 1350ms cubic-bezier(.25,.5,.5,1) forwards;left:var(--x);top:-25px;background:var(--color);transform:rotate(var(--r))}@keyframes fall{to{top:115%;transform:translateX(var(--drift)) rotate(650deg);opacity:.15}}
+    .winner{color:var(--mint);font-weight:800}.credits{text-align:center;font-size:10px;color:#5c6980;padding-top:18px}.kbd{font-family:'Space Grotesk';border:1px solid #65738e77;border-bottom-width:2px;padding:2px 5px;border-radius:4px;color:#a6b5cb;margin-left:4px}
+    @media(max-width:1100px){.app{padding:24px}.layout{grid-template-columns:minmax(0,1fr) 325px}.stage{min-height:590px}.dice-zone{min-height:350px;margin:0 10px}.face{border-radius:14px}}
+    @media(max-width:790px){.app{padding:17px 15px 24px}.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.sidebar>.panel:first-child{grid-row:span 2}.stage{min-height:580px}.dice-zone{min-height:335px}.header{margin-bottom:18px}.pill{display:none}}
+    @media(max-width:520px){.app{padding:14px 12px 25px}.header{margin-bottom:16px}.brand-symbol{width:44px;height:44px}.brand-name{font-size:22px}.stage{min-height:515px;border-radius:21px}.stage-head{padding:23px 20px 0}.turn-name{font-size:23px}.dice-zone{min-height:305px;margin:0 5px}.dice-row{gap:39px;margin-top:20px}.die-wrap{--size:112px;--half:56px;width:112px;height:112px}.stage-bottom{padding:0 8px 24px;min-height:124px}.result-number{font-size:34px}.main-action{min-height:48px}.info-strip{gap:7px;margin-top:12px}.info-card{padding:13px 11px;border-radius:12px}.info-card .small{font-size:9px}.info-card .big{font-size:17px}.sidebar{display:flex;gap:12px;align-items:stretch}.panel{padding:19px}.header-right .icon-btn{width:37px;height:37px}}
+    @media(max-width:365px){.die-wrap{--size:93px;--half:46.5px;width:93px;height:93px}.dice-row{gap:30px}.stage-head{padding:18px 15px 0}.turn-badge{padding:7px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  
+/* Multiplayer controls */
+.top-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px;padding:14px 18px;border-radius:18px;border:1px solid #9debd334;background:linear-gradient(90deg,#15383b5e,#25254c55)}
+.room-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700;font-size:12px}.room-code{font:900 20px 'Space Grotesk';letter-spacing:3px;color:var(--mint)}
+.share-btn,.exit-btn{border-radius:12px;border:1px solid #8cf6d453;background:#1b3640;color:#bbffed;font-weight:800;font-size:11px;padding:12px 13px}.exit-btn{background:#241f36;color:#cfc9e7;border-color:#ffffff24}
+.online-label{font-size:11px;color:#88a5b6;font-weight:600}
+.tool-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.cup-shell{position:absolute;z-index:10;left:50%;top:51%;width:235px;height:245px;transform:translate(-50%,-52%);filter:drop-shadow(0 35px 20px #0009);pointer-events:none;transform-origin:50% 86%;transition:transform 850ms cubic-bezier(.25,.82,.3,1),opacity 470ms ease;will-change:transform}
+.cup-shell::after{content:'';position:absolute;z-index:-1;left:5%;right:5%;bottom:10px;height:30px;background:#06081673;filter:blur(13px);border-radius:50%}
+.cup-body{position:absolute;top:24px;bottom:20px;left:5px;right:5px;clip-path:polygon(19% 0,81% 0,99% 94%,94% 99%,6% 99%,1% 94%);border-radius:0 0 30px 30px;background:linear-gradient(92deg,#45325b 0%,#8064a5 13%,#ac8aca 26%,#7c5b9c 44%,#594276 65%,#9d7cb7 86%,#433459 100%);box-shadow:inset 0 -10px 20px #221a3d7a}
+.cup-body::before{content:'';position:absolute;inset:4% 25% 10% 11%;background:linear-gradient(112deg,transparent,#fff9 40%,transparent 70%);opacity:.25;transform:skew(-12deg)}
+.cup-body::after{content:'LUCKY';position:absolute;top:48%;left:50%;transform:translate(-50%,-50%) rotate(-2deg);font:900 24px 'Space Grotesk';letter-spacing:3px;color:#efe3ffcc;text-shadow:0 1px 10px #d6b7ff66}
+.cup-top{position:absolute;top:17px;left:18%;right:18%;height:41px;z-index:2;background:radial-gradient(ellipse at 50% 30%,#dbbde8,#9671b2 65%,#5a4479 100%);border:4px solid #d3aeee;border-radius:50%;box-shadow:inset 0 9px 12px #b89ace8c,0 4px 7px #2b1e41}
+.cup-rim{position:absolute;bottom:14px;left:3px;right:3px;height:30px;border-radius:50%;border:9px solid #b998d7;background:linear-gradient(#41275a,#8f64b0);box-shadow:0 7px 7px #07061288;z-index:3}
+.cup-gem{position:absolute;top:102px;left:50%;transform:translateX(-50%);width:20px;height:20px;background:#98ffe0;box-shadow:0 0 22px #88ffe9aa;clip-path:polygon(50% 0,99% 50%,50% 99%,0 50%);z-index:4}
+.dice-row{opacity:0;transition:opacity .2s,transform .18s}
+.dice-zone.revealed .dice-row{opacity:1;transition:opacity 250ms .25s,transform .18s}
+.dice-zone.revealed .cup-shell{transform:translate(calc(-50% + 240px),calc(-52% - 150px)) rotate(18deg) scale(.65);opacity:0}
+.dice-zone.grabbing .cup-shell{transform:translate(calc(-50% + var(--shake-x,0px)),calc(-52% + var(--shake-y,0px))) rotate(var(--shake-r,0deg)) scale(1.03)}
+.dice-zone.grabbing:not(.revealed) .cup-shell{transition:transform .095s ease-out}
+.cup-hint{position:absolute;z-index:12;top:21px;font-size:11px;color:#cdb6fa;background:#19172e9c;padding:9px 14px;border:1px solid #aa95d22e;border-radius:99px;pointer-events:none}
+.dice-zone.revealed .cup-hint{opacity:0}
+.dice-zone:not(.revealed) .dice-row{visibility:hidden}
+.lobby-overlay{position:fixed;inset:0;z-index:100;background:linear-gradient(150deg,#090e20eb,#10152df1);display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto;backdrop-filter:blur(15px)}
+.lobby-card{width:min(100%,540px);padding:35px;background:linear-gradient(145deg,#202b4a,#121c33);border:1px solid #8a8fce61;border-radius:28px;box-shadow:0 22px 100px #000a}
+.lobby-title{font:800 clamp(26px,5vw,38px)/1.16 'Space Grotesk';letter-spacing:-1px;margin:15px 0 10px}.lobby-title em{color:var(--mint);font-style:normal}
+.lobby-copy{color:#aabbd4;line-height:1.7;font-size:12px;margin-bottom:24px}.lobby-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.lobby-tile{padding:20px;background:#151d35;border:1px solid #8d96cf38;border-radius:17px}
+.lobby-tile h3{font-size:15px;margin:0 0 10px}.lobby-tile p{font-size:11px;line-height:1.7;color:#a1b0ca;min-height:52px}.join-input{width:100%;padding:13px 15px;border-radius:12px;border:1px solid #67799886;background:#0d1529;color:#f4f6ff;outline:none;margin:0 0 10px;font-size:13px}.join-input:focus{border-color:#83f5cd}
+.lobby-btn{border:0;border-radius:12px;padding:12px 13px;width:100%;font-weight:900;font-size:12px;background:linear-gradient(110deg,#a68cff,#7fefdd);color:#10192a}.lobby-btn.alt{background:#303653;color:#d6e7ff;border:1px solid #ffffff2b}
+.lobby-message{min-height:26px;margin-top:10px;color:#ffc29e;font-size:12px;text-align:center}.host-mark{font-size:9px;color:#abffde;border:1px solid #83f5cd42;border-radius:99px;padding:3px 6px;margin-left:6px}.you-mark{font-size:10px;color:#a99cf1}
+.connect-state{font-size:10px;color:#8b9fbd;text-align:center;margin-top:14px}
+#rejoinBtn{display:none}
+@media(max-width:840px){.top-tools{align-items:flex-start;flex-direction:column}}
+@media(max-width:540px){.lobby-card{padding:24px 19px}.lobby-grid{grid-template-columns:1fr}.lobby-tile p{min-height:0}.cup-shell{width:205px;height:215px}.dice-zone.revealed .cup-shell{transform:translate(calc(-50% + 150px),calc(-52% - 120px)) rotate(18deg) scale(.6)}.top-tools{padding:14px}.room-code{font-size:18px}}
+@media(max-width:375px){.cup-shell{width:179px;height:196px}.cup-body::after{font-size:18px}.dice-zone.revealed .cup-shell{transform:translate(calc(-50% + 110px),calc(-52% - 120px)) rotate(18deg) scale(.5)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand"><div class="brand-symbol"><div class="brand-die"></div></div><div><div class="brand-name">dice<span style="color:#a7eede">.</span><em>party</em></div><div class="brand-sub">SHAKE YOUR LUCK</div></div></div>
+    <div class="header-right"><div class="pill"><span class="pulse-dot"></span> MULTIPLAYER · LIVE</div><button id="soundBtn" class="icon-btn" title="Bật/tắt âm thanh" aria-label="Bật/tắt âm thanh">♫</button></div>
+  </header>
+  <div class="top-tools" id="topTools" style="display:none"><div class="room-info"><span class="online-label">● PHÒNG ĐANG CHƠI</span><span class="room-code" id="roomCode">------</span><span class="online-label" id="connectionLabel">Đang kết nối...</span></div><div class="tool-buttons"><button class="share-btn" id="shareBtn">↗ SAO CHÉP LINK MỜI</button><button class="exit-btn" id="leaveBtn">RỜI PHÒNG</button></div></div><div class="layout">
+    <main class="game-main">
+      <section class="stage" aria-label="Bàn xúc xắc 3D">
+        <div class="sparkle s1"></div><div class="sparkle s2"></div><div class="sparkle s3"></div><div class="sparkle s4"></div><div class="sparkle s5"></div>
+        <div class="stage-head"><div><p class="eyebrow" id="stateEyebrow">SẴN SÀNG MAY MẮN?</p><div class="turn-name" id="turnName">Một chút <span class="accent">may mắn</span>,<br>một chút bất ngờ.</div></div><div class="turn-badge">VÒNG CHƠI<strong id="roundBadge">—</strong></div></div>
+        <div class="dice-zone" id="diceZone" role="button" tabindex="0" aria-label="Giữ chuột hoặc chạm, lắc rồi thả để gieo xúc xắc; nhấn Enter hoặc Space để đổ">
+          <div class="table-ellipse"></div>
+          <div class="cup-hint" id="cupHint">ÚP CỐC · GIẤU KẾT QUẢ</div><div class="cup-shell" id="cupShell" aria-hidden="true"><div class="cup-body"></div><div class="cup-top"></div><div class="cup-rim"></div><div class="cup-gem"></div></div><div class="dice-row" id="diceRow"><div class="die-wrap" id="dieWrap0"><div class="die" id="die0"></div></div><div class="die-wrap second" id="dieWrap1"><div class="die" id="die1"></div></div></div>
+          <div class="floating-cue" id="floatCue">✦ <span>Giữ &amp; <b>lắc qua lại</b> để tăng độ ngẫu nhiên</span> ✦</div>
+        </div>
+        <div class="stage-bottom"><div class="result-area" aria-live="polite"><div id="resultLabel" class="mini-pill">2 xúc xắc · 12 mặt may mắn</div><div id="resultNumber" class="result-number" style="display:none"></div></div><button id="rollBtn" class="main-action" disabled>✦ BẮT ĐẦU ĐỂ CHƠI</button><div class="hint" id="stageHint">Lắc khi đến lượt bạn — kết quả sẽ được mở khi thả cốc</div></div>
+        <div class="celebration" id="celebration"></div>
+      </section>
+      <div class="info-strip"><div class="info-card"><div class="small">LƯỢT ĐÃ ĐỔ</div><div class="big" id="statRolls">0</div></div><div class="info-card"><div class="small">ĐIỂM CAO NHẤT / LƯỢT</div><div class="big" id="statHigh">—</div></div><div class="info-card"><div class="small">TỔNG ĐIỂM CẢ BÀN</div><div class="big" id="statTotal">0</div></div></div>
+    </main>
+    <aside class="sidebar">
+      <section class="panel"><div class="panel-head"><div class="panel-title">✦ Người chơi</div><span class="panel-count" id="playerCount">0 người</span></div><form class="add-row" id="addForm"><input class="name-field" id="nameInput" placeholder="Nhập tên người chơi..." maxlength="24" autocomplete="off" aria-label="Tên người chơi"/><button class="add-btn" type="submit" title="Thêm người chơi" aria-label="Thêm người chơi">+</button></form><div class="player-list" id="playerList"><div class="empty">Chưa có ai trên bàn chơi.<br>Thêm người đầu tiên nhé ✨</div></div><button id="startBtn" class="start-btn" disabled>BẮT ĐẦU VÁN CHƠI ↗</button><button id="endBtn" class="subtle-btn" style="display:none">KẾT THÚC PHIÊN</button><p class="panel-note" id="setupNote">Không cần đăng ký. Mời bạn bè qua link. Mỗi người mở trên thiết bị riêng hoặc chủ phòng thêm người chơi tại chỗ.</p></section>
+      <section class="panel"><div class="panel-head"><div class="panel-title">🏆 Bảng xếp hạng</div><span class="panel-count" id="rankCount">ĐIỂM</span></div><div class="leaderboard" id="rankList"><div class="empty">Bảng điểm sẽ xuất hiện khi bắt đầu.</div></div></section>
+      <section class="panel"><div class="panel-head"><div class="panel-title">◷ Lịch sử phiên</div><span class="panel-count" id="histCount">0 lượt</span></div><div class="history" id="history"><div class="empty">Chỉ lưu trong phiên phòng chơi hiện tại.</div></div></section>
+    </aside>
+  </div>
+  <div class="credits">DICE PARTY © 2026 · JUST FRIENDS, DICE & GOOD VIBES · Phòng tự hết hạn sau 60 phút không có lượt mới · Chủ phòng đóng là xóa ngay</div>
+</div>
+<div class="lobby-overlay" id="lobbyOverlay">
+ <div class="lobby-card">
+   <div class="brand"><div class="brand-symbol"><div class="brand-die"></div></div><div><div class="brand-name">dice<span style="color:#a7eede">.</span><em>party</em></div><div class="brand-sub">LIVE ROOMS · HIDDEN DICE</div></div></div>
+   <h1 class="lobby-title">Một chiếc cốc.<br><em>Vô vàn may mắn.</em></h1>
+   <p class="lobby-copy">Tạo phòng mới hoặc vào phòng của bạn bè. Không tài khoản, không đăng ký. Chỉ người đến lượt mới được lắc cốc — mọi màn hình đều xem kết quả cùng lúc.</p>
+   <div class="lobby-grid">
+      <form id="createForm" class="lobby-tile"><h3>✨ Tạo phòng</h3><p>Chủ phòng bắt đầu ván, thêm người chơi và chia sẻ link mời.</p><input id="createName" class="join-input" placeholder="Tên của bạn" maxlength="24" required autocomplete="nickname"><button id="createBtn" type="submit" class="lobby-btn">TẠO PHÒNG MỚI ↗</button></form>
+      <form id="joinForm" class="lobby-tile"><h3>🎟️ Vào phòng</h3><p>Nhập mã phòng 6 ký tự, hoặc mở link mời từ bạn bè.</p><input id="joinCode" class="join-input" placeholder="MÃ PHÒNG" maxlength="6" autocapitalize="characters" required><input id="joinName" class="join-input" placeholder="Tên của bạn" maxlength="24" required autocomplete="nickname"><button id="joinBtn" type="submit" class="lobby-btn alt">THAM GIA ↗</button><button id="rejoinBtn" type="button" class="lobby-btn alt">VÀO LẠI PHÒNG ↗</button></form>
+   </div><div class="lobby-message" id="lobbyMessage" role="status"></div><div class="connect-state" id="setupStatus">Đang khởi tạo kết nối...</div>
+ </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
