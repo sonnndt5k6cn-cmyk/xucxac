@@ -1,0 +1,10 @@
+{
+  "name":"dice-party-vercel-redis",
+  "version":"3.0.0",
+  "private":true,
+  "type":"module",
+  "description":"Hidden cup 3D dice game, guest rooms, Redis TTL sync on Vercel",
+  "scripts":{"test":"node --test tests/*.test.js", "dev":"vercel dev","demo":"node dev/demo-server.mjs"},
+  "engines":{"node":">=20"},
+  "dependencies":{"@upstash/redis":"^1.39.0"}
+}
