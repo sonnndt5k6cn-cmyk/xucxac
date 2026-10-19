@@ -10,7 +10,7 @@ export default async function handler(req,res) {
   if(req.method!=='POST')return res.status(405).json({ok:false,error:'Yêu cầu không hợp lệ.'});
   if(Number(req.headers['content-length']||0)>4096)return res.status(413).json({ok:false,error:'Nội dung quá lớn.'});
   try {
-    const actor=actorOf(req),{action,code,name,playerId}=req.body||{},redis=getRedis();
+    const actor=actorOf(req),{action,code,name,playerId,count}=req.body||{},redis=getRedis();
     assert(typeof action==='string','Thiếu thao tác.');
     if(action==='create'){
       const newCode=await createUniqueRoom(redis,newRoomCode,()=>createRoom(actor,name));
@@ -24,7 +24,7 @@ export default async function handler(req,res) {
       assert(Number(ok)===1,'Phòng có thay đổi, hãy thử đóng lại.',409);
       return res.json({ok:true,closed:true});
     }
-    const updated=await atomicMutate(redis,code,room=>mutate(room,actor,{action,name,playerId}));
-    return res.status(200).json({ok:true,...(action==='join'?{}:{version:updated.version})});
+    const updated=await atomicMutate(redis,code,room=>mutate(room,actor,{action,name,playerId,count}));
+    return res.status(200).json({ok:true,version:updated.version,...(action==='shake'?{shakes:updated.active.shakes}:{}),...(action==='finish'?{room:publicRoom(updated,actor)}:{})});
   }catch(e){return sendError(res,e);}
 }

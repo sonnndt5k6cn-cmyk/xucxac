@@ -42,3 +42,14 @@ test('chỉ host quản lý game và không thể sửa kết quả bằng input
 test('mã nhận diện dựa trên hash của token',()=>{
  assert.equal(actorHash('x'),actorHash('x'));assert.notEqual(actorHash('x'),actorHash('y'));
 });
+test('server lắc theo lô gọi random mỗi nhịp và không công bố trước khi mở cốc',()=>{
+ let r=createRoom('host','Chủ',1700000000000),draws=0;
+ r=mutate(r,'host',{action:'start'},1700000000000);
+ const id=r.players[0].id;
+ const rng=()=>{draws++;return draws%2?[1,2]:[5,6]};
+ r=mutate(r,'host',{action:'shake',playerId:id,count:7},1700000000000,rng);
+ assert.equal(draws,7);assert.equal(r.active.shakes,7);
+ assert.equal(publicRoom(r,'host').secretPair,undefined);
+ r=mutate(r,'host',{action:'finish',playerId:id},1700000000100,rng);
+ assert.equal(r.lastReveal.shakes,7);assert.equal(draws,7);
+});
